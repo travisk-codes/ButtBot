@@ -3,13 +3,13 @@ const { SlashCommandBuilder } = require('discord.js')
 const emojis = [
 	'🍑',
 	'🍆',
-	'<:peachtone0:1147912515104288839>',
-	'<:peachtone1:1147912516752638015>',
-	'<:peachtone2:1147912518933696564>',
-	'<:peachtone3:1147912520099713124>',
-	'<:peachtone4:1147912521265725603>',
-	'<:peachtone5:1147912522893111416>',
-	'<:peachtonemetal:1148058685520756756>',
+	'<:peach_tone0:1148439074596720710>',
+	'<:peach_tone1:1148446587442442301>',
+	'<:peach_tone2:1148440546252181634>',
+	'<:peach_tone3:1148440548055724154>',
+	'<:peach_tone4:1148440549444034651>',
+	'<:peach_tone5:1148440552073859172>',
+	'<:peach_tonemetal:1148440553881616476>',
 ]
 
 module.exports = {

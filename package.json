@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "discord.js": "^14.13.0",
+    "moment": "^2.29.4",
     "openai": "^4.4.0"
   }
 }
