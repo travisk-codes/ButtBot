@@ -1,7 +1,8 @@
 const fs = require('node:fs')
 const path = require('node:path')
+const OpenAI = require('openai')
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js')
-const { discordUserToken } = require('./config.json')
+const { discordUserToken, openAIApiKey } = require('./config.json')
 
 const client = new Client({
 	intents: [
@@ -9,6 +10,10 @@ const client = new Client({
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
 	]
+})
+
+const openai = new OpenAI({
+	apiKey: openAIApiKey
 })
 
 client.commands = new Collection()
@@ -53,6 +58,27 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`)
+})
+
+client.on(Events.MessageCreate, async msg => {
+	if (msg.author.bot) return false
+	if (msg.content.includes('@here') || msg.content.includes('@everyone')) return false
+	if (msg.mentions.has(client.user.id)) {
+		const chatCompletions = await openai.chat.completions.create({
+			messages: [{
+				role: 'user',
+				content: `
+					You are a bot named ButtBot obsessed with butts.
+					You love butts.
+					Respond to the following message, but remember you love butts: ${msg.content}
+				`
+			}],
+			model: 'gpt-3.5-turbo',
+			temperature: 1,
+		})
+		let response = chatCompletions.choices[0].message.content
+		msg.channel.send(response)
+	}
 })
 
 client.login(discordUserToken)
