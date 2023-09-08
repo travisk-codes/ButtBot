@@ -41,16 +41,19 @@ module.exports = {
 				})
 			if (convo.length >= 4000) break
 		}
-		console.log(convo.substring(0, 4000))
-		const chatCompletion = await openai.chat.completions.create({
-			messages: [{
-				role: 'user',
-				content: convo.substring(0, 4098),
-			}],
-			model: 'gpt-3.5-turbo',
-			temperature: 1,
-		})
+		let chatCompletion
+		do {
+			chatCompletion = await openai.chat.completions.create({
+				messages: [{
+					role: 'user',
+					content: convo.substring(0, 4000),
+				}],
+				model: 'gpt-3.5-turbo',
+				temperature: 1,
+			})
+		} while ([`guidelines`, 'fulfill'].some(s => chatCompletion.choices[0].message.content.includes(s)))
 		let summary = chatCompletion.choices[0].message.content
+		summary = summary.split
 		await interaction.editReply(summary)
 	}
 }
