@@ -193,30 +193,20 @@ client.on(Events.MessageCreate, async msg => {
 	Do not respond in multiple messages, you must respond in a single message.
 	Respond to the following message in a single message, but remember you love butts, so mention butts if you can, and don't be too wordy, be succinct in your answers as if you're just a regular human being: ${msg.content}
 `
+	// get the rate at which chat is flyin'
 	const messageCount = 10
-	// get the last 10 messages from the channel the message is from
 	const messages = await msg.channel.messages.fetch({ limit: messageCount })
-	// get the time of the 1st and 10th messages
 	const firstMessageTime = messages.first().createdTimestamp
 	const lastMessageTime = messages.last().createdTimestamp
-	// get the time difference between the 1st and 10th messages
 	const timeDifference = moment.duration(moment(firstMessageTime).diff(moment(lastMessageTime)))
-	// get the average messages per second
 	const messagesPerSecond = messageCount / timeDifference.asSeconds()
-
-	// print the average messages per second with the channel and server name
 	console.log(`Average messages per second in ${msg.channel.name} in ${msg.guild.name}: ${messagesPerSecond}`)
-	// if the average messages per second is greater than 0.75 msgs/seconds,
-	// then send a dm to user with id 656948986867089423 telling them the name of
-	// the channel and a link to that channel
+
 	if (messagesPerSecond > 0.5) {
-		// if we haven't sent a dm to user in the last 30 minutes,
-		// then send a dm to user
 		const user = await client.users.fetch('656948986867089423')
 		const dm = await user.createDM()
-		console.log(dm.lastMessage)
-		// send a dm to the user with the channel link, as well as a list of the 
-		// active chatters in the last 10 messages
+
+		// Construct the dm to send the user
 		const activeChatters = messages.reduce((acc, message) => {
 			if (message.author.bot) return acc
 			if (acc.includes(message.author.id)) return acc
@@ -224,14 +214,28 @@ client.on(Events.MessageCreate, async msg => {
 		}, [])
 		const activeChattersList = activeChatters.map(id => `<@${id}>`).join(', ')
 		const channelLink = msg.channel.toString()
-		const isAfterFiveMinutes = moment.duration(moment(dm.messages.fetch({ limit: 1}).then(c => c.first()).createdTimestamp).diff(moment())).asMinutes() > 5
+		const dmToSend = `${channelLink} is hot right now! Active chatters: ${activeChattersList}`
+		
+		// Conditions to check
+		const lastMessage = dm.messages.fetch({ limit: 1}).then(c => c.first())
+		const isAfterFiveMinutes = moment.duration(moment(lastMessage?.createdTimestamp).diff(moment())).asMinutes() > 5
 		const botAndUserBelongToSameChannel = msg.channel.members.has(client.user.id) && msg.channel.members.has(user.id)
-		if (dm.lastMessage !== null && isAfterFiveMinutes && botAndUserBelongToSameChannel) {
-			// get dm conversation with the user
-			// if it has been longer than 5 minutes, send another dm
-			await dm.send(`${channelLink} is hot right now! Active chatters: ${activeChattersList}`)
-		} else if (dm.lastMessage === null && botAndUserBelongToSameChannel) {
-			await dm.send(`${channelLink} is hot right now! Active chatters: ${activeChattersList}`)
+		const isUserActive = activeChatters.includes(user.id)
+
+		// Send the message
+		if (
+			lastMessage !== null
+			&& isAfterFiveMinutes
+			&& botAndUserBelongToSameChannel
+			&& !isUserActive
+		) {
+			await dm.send(dmToSend)
+		} else if (
+			lastMessage === null
+			&& botAndUserBelongToSameChannel
+			&& !isUserActive
+		) {
+			await dm.send(dmToSend)
 		} else {
 			console.log(`Not sending a dm to ${user.username} because it has been less than 5 minutes since the last dm`)
 		}
