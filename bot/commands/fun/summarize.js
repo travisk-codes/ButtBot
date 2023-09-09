@@ -67,7 +67,6 @@ module.exports = {
 			temperature: 1,
 		})
 		let summary = chatCompletion.choices[0].message.content
-		await interaction.editReply(`> The past ${count} ${units} in #${interaction.channel.name}:
-		${summary}`)
+		await interaction.editReply(`**The past ${count} ${units} in #${interaction.channel.name}:**\n${summary}`)
 	}
 }
