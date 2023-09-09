@@ -224,12 +224,13 @@ client.on(Events.MessageCreate, async msg => {
 		}, [])
 		const activeChattersList = activeChatters.map(id => `<@${id}>`).join(', ')
 		const channelLink = msg.channel.toString()
-		if (dm.lastMessage !== null && moment.duration(moment(dm.lastMessage.createdTimestamp).diff(moment())).asMinutes() > 5) {
-
+		const isAfterFiveMinutes = moment.duration(moment(dm.messages.fetch({ limit: 1}).then(c => c.first()).createdTimestamp).diff(moment())).asMinutes() > 5
+		const botAndUserBelongToSameChannel = msg.channel.members.has(client.user.id) && msg.channel.members.has(user.id)
+		if (dm.lastMessage !== null && isAfterFiveMinutes && botAndUserBelongToSameChannel) {
 			// get dm conversation with the user
 			// if it has been longer than 5 minutes, send another dm
 			await dm.send(`${channelLink} is hot right now! Active chatters: ${activeChattersList}`)
-		} else if (dm.lastMessage === null) {
+		} else if (dm.lastMessage === null && botAndUserBelongToSameChannel) {
 			await dm.send(`${channelLink} is hot right now! Active chatters: ${activeChattersList}`)
 		} else {
 			console.log(`Not sending a dm to ${user.username} because it has been less than 5 minutes since the last dm`)
