@@ -15,10 +15,10 @@ const emojis = [
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('peach')
-		.setDescription('Sends a random peach emoji.'),
+		.setDescription('Sends a random peach emoji (usually...)'),
 	async execute(interaction) {
 		const random = Math.floor(Math.random() * emojis.length)
 		const emoji = emojis[random]
-		await interaction.reply(emoji)
+		await interaction.channel.send(emoji, { private: true })
 	}
 }

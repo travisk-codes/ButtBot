@@ -53,12 +53,21 @@ module.exports = {
 		const chatCompletion = await openai.chat.completions.create({
 			messages: [{
 				role: 'user',
-				content: `summarize the following conversation:\n${convo}`,
+				content: `
+					You are a chat bot designed to review conversations and produce short summaries of their contents.
+					Don't go into too many details.
+					If the conversation is short, make the summary one sentence.
+					If the conversation is long, make it a short paragraph.
+					The goal is to provide a useful way for users to check whether they want to read the conversation or not.
+					Summarize the topics discussed in the following conversation:
+					${convo}
+				`,
 			}],
 			model: 'gpt-3.5-turbo',
 			temperature: 1,
 		})
 		let summary = chatCompletion.choices[0].message.content
-		await interaction.editReply(summary)
+		await interaction.editReply(`> The past ${count} ${units} in #${interaction.channel.name}:
+		${summary}`)
 	}
 }

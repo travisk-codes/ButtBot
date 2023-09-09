@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Inconsolata&display=swap');
+
+* {
+	font-size: calc(18px + 2vw);
+}
+
+@keyframes fadeIn {
+	from {
+		/* transform: translateY(-100px); */
+		translate: 0 -100px;
+		opacity: 0%;
+	}
+
+	to {
+		/* transform: translateY(0px); */
+		translate: 0 0px;
+		opacity: 100%;
+	}
+}
+
+body, html {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	color: white;
+	font-family: 'Gochi Hand', cursive;
+	text-align: center;
+	width: 100%;
+	background: linear-gradient(#f37, rgb(255, 170, 51));
+	background-attachment: fixed;
+}
+
+#peach {
+	width: 80px;
+	height: 80px;
+	margin-right: 10px;
+}
+
+#title {
+	margin: 0;
+	padding-top: 64px;
+	font-size: 3rem;
+	animation-name: fadeIn;
+	animation-duration: 1s;
+	cursor: default;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* animation-timing-function: linear; */
+
+}
+
+#subtitle {
+	margin: 0;
+	font-size: 1.25rem;
+	animation-name: fadeIn;
+	animation-duration: 1.5s;
+	cursor: default;
+	/* animation-timing-function: linear; */
+}
+
+#subsubtitle {
+	font-size: .75rem;
+	margin: 0;
+	animation-name: fadeIn;
+	animation-duration: 2s;
+	padding-top: 10px;
+	cursor: default;
+}
+
+div {
+	margin: 0 auto;
+	margin-bottom: 32px;
+	padding: 5px 10px;
+	font-size: 1rem;
+	animation-name: fadeIn;
+	animation-duration: 1.5s;
+	animation-timing-function: ease-in;
+	transition: transform 0.1s linear;
+	min-width: 290px;
+	width: fit-content;
+	font-family: 'Inconsolata', monospace;
+	cursor: default;
+}
+
+a {
+	color: white;
+	text-decoration: none;
+	padding: 5px 10px;
+	border: 2px solid rgb(255 255 255 / 20%);
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+a:hover {
+	border: 2px solid white;
+}
